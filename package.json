@@ -1,0 +1,28 @@
+{
+  "name": "github-firehose",
+  "version": "1.0.0",
+  "description": "SSE GitHub Firehose",
+  "main": "app.js",
+  "engines": {
+    "node": "10.1.0"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/librariesio/github-firehose.git"
+  },
+  "bugs": {
+    "url": "https://github.com/librariesio/github-firehose/issues"
+  },
+  "homepage": "https://github.com/librariesio/github-firehose",
+  "author": "Andrew Nesbitt",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.5.3",
+    "eventemitter3": "^2.0.2",
+    "express": "^4.12.3"
+  }
+}

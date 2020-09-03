@@ -24,7 +24,7 @@
             <p class="lead">
             <div id="timeline"></div>
             </p>
-            <a class="btn btn-lg btn-primary" href="../../components/navbar/" role="button">View navbar docs &raquo;</a>
+            <a class="btn btn-lg btn-primary" href="../../components/navbar/" role="button">More</a>
           </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -49,11 +49,11 @@
       }
       evtSource.addEventListener('event', function(evt) {
         data = JSON.parse(evt.data);
-        if (data['type'] == 'IssuesEvent') {
-          events.push(data)
-        }
+        events.push(data)
         trimmed = events.slice(Math.max(events.length - 30, 1))
         html = trimmed.reverse().map(function(obj){
+          console.log(obj);
+          if(obj.type == 'IssuesEvent'){
           return '<div class="media">\
             <div class="media-left">\
               <a href="https://github.com/'+obj.actor.login+'">\
@@ -72,7 +72,8 @@
               </p>\
             </div>\
           </div>'
-        }).join('')
+
+        }}).join('')
 
         $('#timeline')[0].innerHTML = html
         //$('#timeline').append(html)

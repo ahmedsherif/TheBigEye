@@ -30,8 +30,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
     <script type="text/javascript">
-      var evtSource = new EventSource('/events');
-      var events = []
       var actionDescription = function(obj){
         switch (obj.type) {
           case 'IssueCommentEvent':
@@ -47,12 +45,18 @@
             return obj.type.toString()
         }
       }
+      var events = []
+      var topics = ['path traversal', 'MIME spoofing content', 'XSS', 'CSRF', 'SSRF', 'RCE/command execution', 'Insecure default', 'secure mode', 'Insecure Encryption', 'SQL injection', 'XML External Entity (XXE)', 'Injection', 'Unprotected Storage of Credentials', 'Improper Authorization', 'Cleartext Transmission of Sensitive', 'Open Redirect', 'Arbitrary Code Execution', 'Directory Traversal', 'Traversal', 'CSRF', 'ssrf', 'ssti', 'csti', 'cross', 'vulnerability', 'CVE', 'Serialization', 'deSerialization', 'SECURITY']
+      var evtSource = new EventSource('/events');
       evtSource.addEventListener('event', function(evt) {
         data = JSON.parse(evt.data);
         if (data['type'] == 'IssuesEvent') {
-          events.push(data)
+          console.log(data['payload']['issue']['title']);
+          if (topics.find(topic => data['payload']['issue']['title'].toLowerCase().search(topic.toLowerCase()) != -1)) {
+            events.push(data);
+          }
         }
-        trimmed = events.slice(Math.max(events.length - 30, 1))
+        trimmed = events.slice(Math.max(events.length - 30, 0))
         html = trimmed.reverse().map(function(obj){
           return '<div class="media">\
             <div class="media-left">\

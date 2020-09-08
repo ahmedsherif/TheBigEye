@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Issue Tracker</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+          <a class="navbar-brand" href="#">Top navbar</a>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+          </div>
+        </nav>
+
+        <main role="main" class="container">
+          <div class="jumbotron">
+            <h1>The Big Eye</h1>
+            <p class="lead">
+            <div id="timeline"></div>
+            </p>
+            <a class="btn btn-lg btn-primary" href="../../components/navbar/" role="button">View navbar docs &raquo;</a>
+          </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <script type="text/javascript">
+      var evtSource = new EventSource('/events');
+      var events = []
+      var actionDescription = function(obj){
+        switch (obj.type) {
+          case 'IssueCommentEvent':
+            return ' commented on a issue in '
+            break;
+          case 'IssuesEvent':
+            return ' ' + obj.payload.action + ' an issue in '
+            break;
+          case 'WatchEvent':
+            return ' starred '
+            break;
+          default:
+            return obj.type.toString()
+        }
+      }
+      evtSource.addEventListener('event', function(evt) {
+        data = JSON.parse(evt.data);
+        if (data['type'] == 'IssuesEvent') {
+          events.push(data)
+        }
+        trimmed = events.slice(Math.max(events.length - 30, 1))
+        html = trimmed.reverse().map(function(obj){
+          return '<div class="media">\
+            <div class="media-left">\
+              <a href="https://github.com/'+obj.actor.login+'">\
+                <img class="media-object" src="' + obj.actor.avatar_url + '" width="40" height="40">\
+              </a>\
+            </div>\
+            <div class="media-body">\
+              <h4 class="media-heading">'
+                +'<a href="https://github.com/'+obj.actor.login+'">' + obj.actor.login + '</a> ' + obj.payload.action + ' <a href="'+obj.payload.issue.html_url+'"> ' + obj.payload.issue.title + ' </a>' +
+                  +
+              '</h4>\
+              <p>\
+                <small class="text-muted">'
+                  + obj.created_at +
+                '</small>\
+              </p>\
+            </div>\
+          </div>'
+        }).join('')
+
+        $('#timeline')[0].innerHTML = html
+        //$('#timeline').append(html)
+        //$(html).appendTo( "#timeline" );
+
+
+
+      }, false);
+    </script>
+  </body>
+</html>
